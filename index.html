@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTrack Pro | Cozy Edition</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #fff0f3;
+            --accent: #c9184a;
+            --text: #590d22;
+            --bg: #fff5f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- CUTE BACKGROUND ELEMENTS --- */
+        .bg-item {
+            position: fixed;
+            font-size: 50px;
+            z-index: 0;
+            opacity: 0.6;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+            pointer-events: none; /* User can't click them */
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Positioning the items around the screen */
+        .teddy     { top: 5%; left: 5%; font-size: 80px; }
+        .hotpack   { bottom: 10%; right: 5%; font-size: 70px; }
+        .icecream  { top: 15%; right: 8%; }
+        .coffee    { bottom: 15%; left: 10%; }
+        .pills     { top: 50%; left: 3%; font-size: 40px; }
+        .chocolate { top: 50%; right: 3%; font-size: 40px; }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.15);
+            position: relative;
+            z-index: 10;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .header h1 { margin: 0; color: var(--accent); font-weight: 800; }
+        .header p { font-style: italic; opacity: 0.7; margin-bottom: 25px; }
+
+        .prediction-card {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 25px;
+            border-radius: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(201, 24, 74, 0.2);
+        }
+
+        .prediction-card h2 { margin: 10px 0; font-size: 2.8rem; font-weight: 800; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+        }
+
+        /* --- FORM STYLING --- */
+        .input-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .full-width { grid-column: span 2; }
+
+        label { font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block; }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ffccd5;
+            border-radius: 15px;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .main-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(201, 24, 74, 0.3);
+        }
+
+        .main-btn:hover { transform: translateY(-3px); background: var(--text); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        td { padding: 15px 0; border-top: 1px solid #ffccd5; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-item teddy">🧸</div>
+    <div class="bg-item hotpack">🌡️</div>
+    <div class="bg-item icecream">🍦</div>
+    <div class="bg-item coffee">☕</div>
+    <div class="bg-item pills">💊</div>
+    <div class="bg-item chocolate">🍫</div>
+    <div class="bg-item teddy">🧸</div>
+    <div class="bg-item hotpack">🌡️</div>
+    <div class="bg-item icecream">🍦</div>
+    <div class="bg-item coffee">☕</div>
+    <div class="bg-item pills">💊</div>
+    <div class="bg-item chocolate">🍫</div>
+
+    <div class="container">
+        <div class="header" style="text-align: center;">
+            <h1>FlowTrack Pro</h1>
+            <p>You’ve got this, queen! ✨</p>
+        </div>
+
+        <div class="prediction-card">
+            <p style="opacity: 0.9;">Next Period Expected</p>
+            <h2 id="next-date">-- -- --</h2>
+            <div class="stats-grid">
+                <div class="stat-item">Ovulation Date<br><strong id="ov-date">-</strong></div>
+                <div class="stat-item">Prep Day 🔔<br><strong id="prep-date">-</strong></div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="full-width">
+                <label>Last Period Start Date</label>
+                <input type="date" id="last-date">
+            </div>
+            <div>
+                <label>Cycle Length</label>
+                <select id="cycle-length">
+                    <option value="28">28 Days</option>
+                    <option value="29">29 Days</option>
+                    <option value="30">30 Days</option>
+                    <option value="31">31 Days</option>
+                    <option value="32">32 Days</option>
+                    <option value="33">33 Days</option>
+                    <option value="34">34 Days</option>
+                    <option value="35">35+ Days</option>
+                </select>
+            </div>
+            <div>
+                <label>Duration</label>
+                <input type="number" id="duration" placeholder="Days">
+            </div>
+            <button class="full-width main-btn" onclick="calculateFlow()">Calculate My Flow</button>
+        </div>
+
+        <h3 style="font-size: 16px; margin-bottom: 10px;">Cycle History</h3>
+        <table>
+            <tbody id="history-log"></tbody>
+        </table>
+    </div>
+
+<script>
+    function calculateFlow() {
+        const lastDateVal = document.getElementById('last-date').value;
+        const cycleLength = parseInt(document.getElementById('cycle-length').value);
+        
+        if (!lastDateVal) {
+            alert("Please select a date first! 🧸");
+            return;
+        }
+
+        const lastDate = new Date(lastDateVal);
+        const nextPeriod = new Date(lastDate);
+        nextPeriod.setDate(lastDate.getDate() + cycleLength);
+
+        const prepDay = new Date(nextPeriod);
+        prepDay.setDate(nextPeriod.getDate() - 1);
+
+        const ovulationDate = new Date(nextPeriod);
+        ovulationDate.setDate(nextPeriod.getDate() - 14);
+
+        const options = { month: 'short', day: 'numeric' };
+        document.getElementById('next-date').innerText = nextPeriod.toLocaleDateString('en-US', options);
+        document.getElementById('ov-date').innerText = ovulationDate.toLocaleDateString('en-US', options);
+        document.getElementById('prep-date').innerText = prepDay.toLocaleDateString('en-US', options);
+
+        // Simple Browser Notification Confirmation
+        if (Notification.permission === "granted") {
+            new Notification("Alarm Scheduled!", {
+                body: `We'll remind you on ${prepDay.toLocaleDateString()} to prepare.`,
+                icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+            });
+        }
+
+        const history = document.getElementById('history-log');
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>Logged: ${lastDateVal}</td><td style="text-align:right">Cycle: ${cycleLength}d</td>`;
+        history.prepend(row);
+    }
+
+    // Ask for permission on load
+    window.onload = () => {
+        if ("Notification" in window) {
+            Notification.requestPermission();
+        }
+    };
+</script>
+
+</body>
+</html>
